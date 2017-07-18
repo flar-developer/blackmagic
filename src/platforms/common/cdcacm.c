@@ -445,11 +445,13 @@ static int cdcacm_control_request(usbd_device *dev,
 		switch(req->wIndex) {
 		case 2:
 			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf);
+			__attribute__ ((fallthrough));
 		case 0:
 			return 1; /* Ignore on GDB Port */
 		default:
 			return 0;
 		}
+		// __attribute__ ((fallthrough));
 	case DFU_GETSTATUS:
 		if(req->wIndex == DFU_IF_NO) {
 			(*buf)[0] = DFU_STATUS_OK;
@@ -462,6 +464,7 @@ static int cdcacm_control_request(usbd_device *dev,
 
 			return 1;
 		}
+		__attribute__ ((fallthrough));
 	case DFU_DETACH:
 		if(req->wIndex == DFU_IF_NO) {
 			*complete = dfu_detach_complete;
